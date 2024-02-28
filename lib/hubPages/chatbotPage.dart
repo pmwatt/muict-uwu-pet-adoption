@@ -1,4 +1,6 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 
 class ChatbotPage extends StatefulWidget {
   const ChatbotPage({
@@ -44,10 +46,28 @@ class _ChatbotPageState extends State<ChatbotPage> {
                     Color.fromARGB(255, 100, 50, 50)),
               ),
               child: Text('Ask', style: TextStyle(color: Colors.white)),
-              onPressed: null,
+              onPressed: generateReply,
             )
           ])),
     );
+  }
+
+  void generateReply() async {
+    final model = GenerativeModel(
+      model: 'gemini-pro',
+      apiKey: dotenv.env['GOOGLE_API_KEY']!,
+      generationConfig: GenerationConfig(maxOutputTokens: 100),
+    );
+
+    final chat = model.startChat(history: [
+      Content.text('Hello, I have 2 dogs in my house.'),
+      Content.model(
+          [TextPart('Great to meet you. What would you like to know?')])
+    ]);
+
+    final content = Content.text('How many paws are in my house?');
+    final response = await chat.sendMessage(content);
+    print(response.text);
   }
 }
 
