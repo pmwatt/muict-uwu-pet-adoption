@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'hub.dart';
 import 'search.dart';
+import 'login.dart';
+import 'register.dart';
 
-void main() => runApp(const UWUApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const UWUApp());
+}
 
 class UWUApp extends StatelessWidget {
   const UWUApp({super.key});
@@ -15,6 +25,8 @@ class UWUApp extends StatelessWidget {
       routes: {
         '/': (context) => const Hub(),
         '/search': (context) => Search(),
+        '/login': (context) => LoginPage(),
+        '/register': (context) => RegisterPage(),
       },
       theme: ThemeData(
         useMaterial3: true,
