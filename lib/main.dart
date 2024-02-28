@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'hub.dart';
+import 'search.dart';
 
 void main() => runApp(const UWUApp());
 
@@ -13,7 +14,7 @@ class UWUApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const Hub(),
-        // '/search': (context) => const Search(),
+        '/search': (context) => Search(),
       },
       theme: ThemeData(
         useMaterial3: true,

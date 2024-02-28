@@ -7,6 +7,8 @@ environment:
   sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
+  cupertino_icons: ^1.0.2
+  flutter_svg: ^2.0.7
   carousel_slider: ^4.2.1
   flutter:
     sdk: flutter
@@ -22,5 +24,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-   - assets/
+   - assets/images/
    - .env
+   - assets/icons/
