@@ -23,7 +23,7 @@ class UWUApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'UWU App',
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
         '/': (context) => const Hub(),
         '/search': (context) => Search(),

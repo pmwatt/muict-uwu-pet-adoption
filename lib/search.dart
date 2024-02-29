@@ -16,25 +16,8 @@ class Search extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: SvgPicture.asset("assets/icons/back.svg"),
-          onPressed: () {},
+          onPressed: () => {Navigator.pushNamed(context, '/')},
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: SvgPicture.asset(
-              "assets/icons/search.svg",
-              colorFilter: ColorFilter.mode(kTextColor, BlendMode.srcIn),
-            ),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: SvgPicture.asset(
-              "assets/icons/dog-origami-paper-svgrepo-com.svg",
-              colorFilter: ColorFilter.mode(kTextColor, BlendMode.srcIn),
-            ),
-            onPressed: () {},
-          ),
-          SizedBox(width: kDefaultPaddin / 2)
-        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

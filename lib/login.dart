@@ -12,6 +12,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  String message = 'Enter your credentials';
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
           key: _formKey,
           child: Column(
             children: [
+              Text(message),
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(labelText: 'Email'),
@@ -52,11 +54,9 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) => Hub()));
                     } on FirebaseAuthException catch (e) {
-                      if (e.code == 'user-not-found') {
-                        print('No user found for that email.');
-                      } else if (e.code == 'wrong-password') {
-                        print('Wrong password provided for that email.');
-                      }
+                      setState(() {
+                        message = 'Invalid login';
+                      });
                     }
                   }
                 },

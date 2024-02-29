@@ -12,18 +12,18 @@ class AboutUsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Text(
-            'About Us',
-            style: textStyleH1,
-          ),
-          Text(
-            'lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ',
-          )
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          'About Us',
+          style: textStyleH1,
+          textAlign: TextAlign.center,
+        ),
+        Text(
+            '6488038 Kanyavee Likitwattanakij\n6488053 Krittanai Peanjaroen\n6488160 Prachnachai Meakpaiboonwattana\n6488221 Thai Mekratanavorakul')
+      ],
     );
   }
 }
