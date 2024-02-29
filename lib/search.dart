@@ -42,7 +42,7 @@ class Search extends StatelessWidget {
                   crossAxisCount: 2,
                   mainAxisSpacing: kDefaultPaddin,
                   crossAxisSpacing: kDefaultPaddin,
-                  childAspectRatio: 0.75,
+                  childAspectRatio: 0.70,
                 ),
                 itemBuilder: (context, index) => ItemCard(
                   product: products[index],

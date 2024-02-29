@@ -30,18 +30,6 @@ class DetailsScreen extends StatelessWidget {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: SvgPicture.asset("assets/icons/search.svg"),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: SvgPicture.asset(
-                "assets/icons/dog-origami-paper-svgrepo-com.svg"),
-            onPressed: () {},
-          ),
-          SizedBox(width: kDefaultPaddin / 2)
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -51,7 +39,7 @@ class DetailsScreen extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(top: size.height * 0.3),
+                    margin: EdgeInsets.only(top: size.height * 0.1),
                     padding: EdgeInsets.only(
                       top: size.height * 0.12,
                       left: kDefaultPaddin,

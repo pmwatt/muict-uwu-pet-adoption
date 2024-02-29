@@ -42,6 +42,7 @@ class _HubState extends State<Hub> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('UWU', style: textStyleH2),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
