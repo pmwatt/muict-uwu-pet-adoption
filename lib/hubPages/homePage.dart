@@ -5,7 +5,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:http_interceptor/http_interceptor.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // Future<List<dynamic>> fetchAnimals(String query) async {
