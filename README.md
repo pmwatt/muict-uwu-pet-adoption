@@ -7,4 +7,4 @@ Ultimate Wilderness Utopia.
 3. Inside `.env`, add your API key to `GOOGLE_API_KEY=<YOUR_KEY>`.
 
 # Running
-1. `flutter run --release`
+1. `flutter run`
