@@ -17,57 +17,99 @@ class ChatbotPage extends StatefulWidget {
 }
 
 class _ChatbotPageState extends State<ChatbotPage> {
+  final userInputController = TextEditingController();
+
+  static final chat = GenerativeModel(
+    model: 'gemini-pro',
+    apiKey: dotenv.env['GOOGLE_API_KEY']!,
+    safetySettings: [
+      SafetySetting(HarmCategory.dangerousContent, HarmBlockThreshold.none),
+      SafetySetting(HarmCategory.hateSpeech, HarmBlockThreshold.none),
+    ],
+  ).startChat(history: [
+    Content.text(
+        'You will act as a pet trainer assistant, named professor garfield, who are supporting users in raising their pets from the pet adoption centre. Please make sure to answer using friendly words.'),
+    Content.model([
+      TextPart(
+          'Hi there, please feel free to let me know if you would like more information about how to take care of adopted pets, or any other questions.')
+    ])
+  ]);
+
   @override
   Widget build(BuildContext context) {
+    // store user input
+
+    final userInput = userInputController.text;
+    String? response;
+
     return Scaffold(
-      body: ListView(shrinkWrap: true, children: <Widget>[
-        Container(
-            child: CircleAvatar(
-              backgroundImage: AssetImage('images/drunkcat.jpg'),
-              radius: 100,
-            ),
-            padding: EdgeInsets.all(5)),
-        Center(child: Text('Pet Guru')),
-        Reply(word: 'Greeting! How can I help you today?'),
-        ChatBox(word: 'How do I take care of pet rock?'),
-        Reply(
-            word:
-                'Great question! Here are some simple steps you can follow:\n 1.Keep your pet rock clean\n 2.Keep your pet rock dry\n 3.Give your pet rock a comfortable home\n 4.Play with your pet rock\n 5.Protect your pet rock'),
-        ChatBox(word: 'Thanks!')
-      ]),
+      body: ListView(
+        shrinkWrap: true,
+        children: <Widget>[
+          CircleAvatar(
+            backgroundImage: AssetImage('images/drunkcat.jpg'),
+            radius: 100,
+          ),
+          Center(child: Text('Professor Garfield')),
+          if (userInput.isNotEmpty) ChatBox(word: userInput),
+          // if (response != null) Reply(word: response!),
+          FutureBuilder<String>(
+            future: generateReply(), // Assign the future here
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Reply(word: snapshot.data!); // Access the response
+              } else if (snapshot.hasError) {
+                return Reply(word: 'Error: ${snapshot.error}'); // Handle error
+              } else {
+                return Center(
+                    child: CircularProgressIndicator()); // Loading indicator
+              }
+            },
+          ),
+        ],
+      ),
       bottomSheet: Container(
-          padding: EdgeInsets.all(2),
-          height: 50,
-          child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            Text('type something ', style: TextStyle(color: Colors.grey)),
-            ElevatedButton(
-              style: const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll<Color>(
-                    Color.fromARGB(255, 100, 50, 50)),
+        padding: EdgeInsets.all(2),
+        height: 50,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
+              child: TextField(
+                controller: userInputController,
+                decoration: InputDecoration(
+                  hintText: 'Type your message here...',
+                ),
+                onEditingComplete: () async {
+                  response = await generateReply();
+                  setState(() {});
+                },
               ),
-              child: Text('Ask', style: TextStyle(color: Colors.white)),
-              onPressed: generateReply,
-            )
-          ])),
+            ),
+            TextButton(
+              onPressed: () async {
+                setState(() {}); // Update UI after getting response
+              },
+              child: Text('Ask'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  void generateReply() async {
-    final model = GenerativeModel(
-      model: 'gemini-pro',
-      apiKey: dotenv.env['GOOGLE_API_KEY']!,
-      generationConfig: GenerationConfig(maxOutputTokens: 100),
-    );
-
-    final chat = model.startChat(history: [
-      Content.text('Hello, I have 2 dogs in my house.'),
-      Content.model(
-          [TextPart('Great to meet you. What would you like to know?')])
-    ]);
-
-    final content = Content.text('How many paws are in my house?');
+  Future<String> generateReply() async {
+    // Get user input from text field controller
+    final userInput = userInputController.text;
+    final Content content;
+    if (userInput.isEmpty) {
+      content = Content.text("Make a short 20-30 words joke.");
+    } else {
+      content = Content.text(userInput);
+    }
     final response = await chat.sendMessage(content);
-    print(response.text);
+    print("response.text: ${response.text}");
+    return response.text!;
   }
 }
 
@@ -78,13 +120,24 @@ class ChatBox extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.fromLTRB(20, 2, 20, 2),
-        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+      padding: EdgeInsets.fromLTRB(20, 2, 20, 2),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
           Card(
-            child: Container(padding: EdgeInsets.all(10), child: Text(word)),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Text(word),
+                ],
+              ),
+            ),
             color: Colors.white,
           ),
-        ]));
+        ],
+      ),
+    );
   }
 }
 
@@ -103,6 +156,7 @@ class Reply extends StatelessWidget {
               child: Text(
                 word,
                 style: TextStyle(color: Colors.white),
+                softWrap: true,
               ),
             ),
             color: Color.fromARGB(255, 172, 92, 92),
