@@ -8,3 +8,13 @@ Ultimate Wilderness Utopia.
 
 # Running
 1. `flutter run`
+
+# Existing Pages
+1. Login
+2. Register
+3. Home
+4. Chatbot
+5. About Us
+6. Search
+7. Pet Details
+8. Organization Details
