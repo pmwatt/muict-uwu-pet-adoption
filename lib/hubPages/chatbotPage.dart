@@ -103,7 +103,8 @@ class _ChatbotPageState extends State<ChatbotPage> {
     final userInput = userInputController.text;
     final Content content;
     if (userInput.isEmpty) {
-      content = Content.text("Make a short 20-30 words joke.");
+      content =
+          Content.text("Make a short 20-30 words greetings as an assistant.");
     } else {
       content = Content.text(userInput);
     }
@@ -150,16 +151,21 @@ class Reply extends StatelessWidget {
     return Container(
         padding: EdgeInsets.fromLTRB(20, 2, 20, 2),
         child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Card(
-            child: Container(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                word,
-                style: TextStyle(color: Colors.white),
-                softWrap: true,
+          Column(
+            children: [
+              Card(
+                child: Container(
+                  width: 500,
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    word,
+                    style: TextStyle(color: Colors.white),
+                    softWrap: true,
+                  ),
+                ),
+                color: Color.fromARGB(255, 172, 92, 92),
               ),
-            ),
-            color: Color.fromARGB(255, 172, 92, 92),
+            ],
           )
         ]));
   }

@@ -35,6 +35,12 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 50,
               ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/organization');
+                },
+                child: Text("View Hot Adoption Centre Examples"),
+              ),
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.center,
               //   children: [
@@ -49,9 +55,9 @@ class _HomePageState extends State<HomePage> {
               //     ElevatedButton(onPressed: () {}, child: Text('Others'))
               //   ],
               // ),
-              // SizedBox(
-              //   height: 50,
-              // ),
+              SizedBox(
+                height: 50,
+              ),
 
               // reference:
               // https://pub.dev/packages/carousel_slider
