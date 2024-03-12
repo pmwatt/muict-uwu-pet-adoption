@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'hubPages/homePage.dart';
 import 'hubPages/chatbotPage.dart';
 import 'hubPages/aboutusPage.dart';
+import 'searchPage.dart';
 
 class Hub extends StatefulWidget {
   const Hub({super.key});
@@ -22,11 +23,12 @@ class _HubState extends State<Hub> {
       fontWeight: FontWeight.normal,
       color: Color.fromARGB(255, 100, 50, 50));
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomePage(
-      textStyleH1: textStyleH1,
-      textStyleH2: textStyleH2,
-    ),
+  static List<Widget> _widgetOptions = <Widget>[
+    // HomePage(
+    //   textStyleH1: textStyleH1,
+    //   textStyleH2: textStyleH2,
+    // ),
+    SearchPage(),
     ChatbotPage(
       textStyleH1: textStyleH1,
       textStyleH2: textStyleH2,
