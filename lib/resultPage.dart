@@ -67,10 +67,10 @@ class _ResultPageState extends State<ResultPage> {
   // step 2: call the api to get pet lists
   Future<void> _fetchPets() async {
     // Get the pet type ID
-    final petTypeId = await _getPetTypeId(widget.querySelectedType);
+    // final petTypeId = await _getPetTypeId(widget.querySelectedType);
 
     // Get the organization ID
-    final orgId = await _getOrganizationId(widget.queryOrg);
+    // final orgId = await _getOrganizationId(widget.queryOrg);
 
     final url = Uri.https(
       'api.petfinder.com',
@@ -78,8 +78,8 @@ class _ResultPageState extends State<ResultPage> {
       {
         // search query
         'name': widget.queryName,
-        'type': petTypeId,
-        'organization': orgId,
+        // 'type': petTypeId,
+        // 'organization': orgId,
         'limit': '20',
       },
     );
@@ -171,8 +171,25 @@ class _ResultPageState extends State<ResultPage> {
                     height: 50,
                     width: 50,
                     fit: BoxFit.cover,
+                    errorBuilder: (BuildContext context, Object exception,
+                        StackTrace? stackTrace) {
+                      return const Text('Image Not Found');
+                    },
+                    // show loading progress
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: CircularProgressIndicator(
+                            // value: loadingProgress.expectedTotalBytes != null
+                            //     ? loadingProgress.cumulativeBytesLoaded /
+                            //         loadingProgress.expectedTotalBytes!
+                            //     : null,
+                            ),
+                      );
+                    },
                   )
-                : null,
+                : const Text('No Image Provided'),
           );
         },
       ),
