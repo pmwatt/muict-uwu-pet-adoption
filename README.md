@@ -14,10 +14,11 @@ Ultimate Wilderness Utopia.
 
 # Existing Pages
 1. Login (used Firebase)
-2. Register (used FIrebase)
-3. Home
+2. Register (used Firebase)
+3. Home (Used petfinder api for search)
 4. Chatbot (used Gemini API)
 5. About Us
 6. Search
 7. Pet Details
 8. Organization Details
+9. User Setting

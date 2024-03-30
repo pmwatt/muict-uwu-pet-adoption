@@ -28,7 +28,10 @@ class _HubState extends State<Hub> {
     //   textStyleH1: textStyleH1,
     //   textStyleH2: textStyleH2,
     // ),
-    SearchPage(),
+    SearchPage(
+      textStyleH1: textStyleH1,
+      textStyleH2: textStyleH2,
+    ),
     ChatbotPage(
       textStyleH1: textStyleH1,
       textStyleH2: textStyleH2,
