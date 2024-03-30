@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'hub.dart';
-import 'search.dart';
 import 'login.dart';
 import 'register.dart';
 import 'organizationDetails.dart';
@@ -27,7 +26,6 @@ class UWUApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/': (context) => const Hub(),
-        '/search': (context) => Search(),
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
         '/organization': (context) => AdoptionCentreDetailsPage(
@@ -45,7 +43,14 @@ class UWUApp extends StatelessWidget {
       },
       theme: ThemeData(
         useMaterial3: true,
-        scaffoldBackgroundColor: Color.fromARGB(30, 170, 100, 100),
+        scaffoldBackgroundColor: const Color.fromARGB(30, 170, 100, 100),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Color.fromARGB(255, 170, 112, 89),
+          selectedItemColor: Color.fromARGB(255, 94, 57, 46),
+          unselectedItemColor: Color.fromARGB(255, 212, 162, 150),
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
+        ),
         colorScheme:
             ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 255, 94, 73)),
       ),

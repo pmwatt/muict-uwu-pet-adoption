@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'hubPages/homePage.dart';
-import 'hubPages/chatbotPage.dart';
-import 'hubPages/aboutusPage.dart';
-import 'searchPage.dart';
+import 'hubPages/chatbot_page.dart';
+import 'hubPages/about_us_page.dart';
+import 'hubPages/search_page.dart';
+import 'hubPages/setting_page.dart';
 
 class Hub extends StatefulWidget {
   const Hub({super.key});
@@ -23,20 +23,20 @@ class _HubState extends State<Hub> {
       fontWeight: FontWeight.normal,
       color: Color.fromARGB(255, 100, 50, 50));
 
-  static List<Widget> _widgetOptions = <Widget>[
-    // HomePage(
-    //   textStyleH1: textStyleH1,
-    //   textStyleH2: textStyleH2,
-    // ),
-    SearchPage(
+  static final List<Widget> _widgetOptions = <Widget>[
+    const SearchPage(
       textStyleH1: textStyleH1,
       textStyleH2: textStyleH2,
     ),
-    ChatbotPage(
+    const ChatbotPage(
       textStyleH1: textStyleH1,
       textStyleH2: textStyleH2,
     ),
-    AboutUsPage(
+    const AboutUsPage(
+      textStyleH1: textStyleH1,
+      textStyleH2: textStyleH2,
+    ),
+    const SettingsPage(
       textStyleH1: textStyleH1,
       textStyleH2: textStyleH2,
     ),
@@ -49,6 +49,7 @@ class _HubState extends State<Hub> {
         title: const Text('UWU', style: textStyleH2),
         automaticallyImplyLeading: false,
       ),
+      // search / chatbot / aboutus / setting page
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
@@ -64,6 +65,10 @@ class _HubState extends State<Hub> {
     }
 
     return BottomNavigationBar(
+      // reference, albeit this uses navigation rail:
+      // https://codelabs.developers.google.com/codelabs/flutter-codelab-first#6
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home_rounded),
@@ -77,9 +82,11 @@ class _HubState extends State<Hub> {
           icon: Icon(Icons.question_mark_rounded),
           label: 'About Us',
         ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings),
+          label: 'Setting',
+        ),
       ],
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
     );
   }
 }

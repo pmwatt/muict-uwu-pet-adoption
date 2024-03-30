@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'dart:async';
+import 'result_page.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({
+final List<String> petTypes = <String>['Dog', 'Cat', 'Bird', 'Rabbit'];
+
+// Search Page
+class SearchPage extends StatefulWidget {
+  const SearchPage({
     super.key,
     required this.textStyleH1,
     required this.textStyleH2,
@@ -12,11 +18,41 @@ class HomePage extends StatefulWidget {
   final TextStyle textStyleH2;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  _SearchPageState createState() => _SearchPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _SearchPageState extends State<SearchPage> {
+  final TextEditingController _searchNameController = TextEditingController();
+  final TextEditingController _searchOrgController = TextEditingController();
   var showcasePetList = ['images/hibernatingcat.jpg', 'images/drunkcat.jpg'];
+  String petSelectedType = 'Animal Type'; // default selected pet type
+  String searchMessage = "Search";
+
+  // handles checking if the form is empty or not
+  Future<void> _searchPets() async {
+    final queryName = _searchNameController.text;
+    final queryOrg = _searchOrgController.text;
+    if (petSelectedType != 'Animal Type' &&
+        (queryName.isNotEmpty || queryOrg.isNotEmpty)) {
+      // Navigate to ResultPage with search query
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResultPage(
+            queryName: queryName,
+            queryOrg: queryOrg,
+            querySelectedType: petSelectedType,
+          ),
+        ),
+      );
+      SchedulerBinding.instance.addPostFrameCallback((_) {});
+    } else {
+      setState(() {
+        searchMessage = "Please select pet type and enter search query.";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -41,24 +77,11 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Text("View Hot Adoption Centre Examples"),
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     ElevatedButton(onPressed: () {}, child: Text('Cats')),
-              //     SizedBox(
-              //       width: 10,
-              //     ),
-              //     ElevatedButton(onPressed: () {}, child: Text('Dogs')),
-              //     SizedBox(
-              //       width: 10,
-              //     ),
-              //     ElevatedButton(onPressed: () {}, child: Text('Others'))
-              //   ],
-              // ),
               SizedBox(
                 height: 50,
               ),
 
+              // carousel
               // reference:
               // https://pub.dev/packages/carousel_slider
               CarouselSlider(
@@ -78,61 +101,70 @@ class _HomePageState extends State<HomePage> {
                 }).toList(),
               ),
 
-              SizedBox(
-                height: 200,
+              // search
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Looking for something more specific?',
+                        style: widget.textStyleH2,
+                      ),
+                      Text(searchMessage),
+                      SizedBox(
+                        height: 20,
+                      ),
+
+                      // dropdown reference
+                      // https://api.flutter.dev/flutter/material/DropdownButton-class.html
+                      DropdownButton(
+                          hint: Text(petSelectedType),
+                          items: petTypes
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              petSelectedType = value!;
+                            });
+                          }),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextField(
+                        controller: _searchNameController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter pet name',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextField(
+                        controller: _searchOrgController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter adoption centre name',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      ElevatedButton(
+                        onPressed: _searchPets,
+                        child: Text('Search'),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              Column(
-                children: [
-                  Text(
-                    'Looking for something more specific?',
-                    style: widget.textStyleH2,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: SearchAnchor(builder:
-                  //       (BuildContext context, SearchController controller) {
-                  //     return SearchBar(
-                  //       controller: controller,
-                  //       padding: const MaterialStatePropertyAll<EdgeInsets>(
-                  //           EdgeInsets.symmetric(horizontal: 16.0)),
-                  //       onTap: () {
-                  //         controller.openView();
-                  //       },
-                  //       onChanged: (_) {
-                  //         controller.openView();
-                  //       },
-                  //       leading: const Icon(Icons.search),
-                  //     );
-                  //   }, suggestionsBuilder:
-                  //       (BuildContext context, SearchController controller) {
-                  //     return List<ListTile>.generate(5, (int index) {
-                  //       final String item = 'item $index';
-                  //       return ListTile(
-                  //         title: Text(item),
-                  //         onTap: () {
-                  //           setState(() {
-                  //             controller.closeView(item);
-                  //           });
-                  //         },
-                  //       );
-                  //     });
-                  //   }),
-                  // ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ButtonTheme(
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/search');
-                        },
-                        child: Text('Search')),
-                  ),
-                ],
-              ),
+
               SizedBox(
                 height: 200,
               ),
