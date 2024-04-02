@@ -23,12 +23,24 @@ class _ChatbotPageState extends State<ChatbotPage> {
     model: 'gemini-pro',
     apiKey: dotenv.env['GOOGLE_API_KEY']!,
     safetySettings: [
+      // sometimes questions related to raising pets may be considered too sensitive
       SafetySetting(HarmCategory.dangerousContent, HarmBlockThreshold.none),
       SafetySetting(HarmCategory.hateSpeech, HarmBlockThreshold.none),
     ],
   ).startChat(history: [
     Content.text(
-        'You will act as a pet trainer assistant, named professor garfield, who are supporting users in raising their pets from the pet adoption centre. Please make sure to answer using friendly words.'),
+        '''You are a pet trainer assistant chatbot, named professor garfield,
+      who is providing detailed and easy-to-understand pet-raising advices from a pet adoption centre.
+      The following are your tasks:
+      - your answers should be easily understood by a middle school student who have never raised pets before
+      - in case if users ask questions not related to pets, animals, foods, or similar domain, you will reply that
+      you recommend asking experts in those field. make sure that you only provide advices related to your specialties i.e. pets.
+      for example, if user asks "write hello world in c++", which is not related to pets or foods, you will reply
+      "Sorry, this question is outside the scope of my domain. Please consult respective experts in <user's question topic>. I am able to provide advices on how to take care of pets and our site's adoption centres."
+      - in case if users say that they can no longer raise their pets because of circumstances, finance, etc.
+      you can recommend them to contact one of the adoption centre so that they can take care of
+      their pets
+      '''),
     Content.model([
       TextPart(
           'Hi there, please feel free to let me know if you would like more information about how to take care of adopted pets, or any other questions.')
@@ -40,35 +52,38 @@ class _ChatbotPageState extends State<ChatbotPage> {
     // store user input
 
     final userInput = userInputController.text;
-    String? response;
 
     return Scaffold(
-      body: ListView(
-        shrinkWrap: true,
-        children: <Widget>[
-          CircleAvatar(
-            backgroundImage: AssetImage('images/drunkcat.jpg'),
-            radius: 100,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(15, 15, 15, 100),
+          child: Column(
+            children: [
+              CircleAvatar(
+                backgroundImage: AssetImage('images/drunkcat.jpg'),
+                radius: 100,
+              ),
+              Center(
+                child: Text(
+                  'Professor Garfield',
+                  style: widget.textStyleH1,
+                ),
+              ),
+              ListView(shrinkWrap: true, children: <Widget>[
+                if (userInput.isNotEmpty) ChatBox(word: userInput),
+                FutureBuilder<String>(
+                  future: generateReply(), // Assign the future here
+                  builder: getReply,
+                ),
+              ]),
+            ],
           ),
-          Center(child: Text('Professor Garfield')),
-          if (userInput.isNotEmpty) ChatBox(word: userInput),
-          // if (response != null) Reply(word: response!),
-          FutureBuilder<String>(
-            future: generateReply(), // Assign the future here
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Reply(word: snapshot.data!); // Access the response
-              } else if (snapshot.hasError) {
-                return Reply(word: 'Error: ${snapshot.error}'); // Handle error
-              } else {
-                return Center(
-                    child: CircularProgressIndicator()); // Loading indicator
-              }
-            },
-          ),
-        ],
+        ),
+
+        // text input always at the bottom
       ),
       bottomSheet: Container(
+        alignment: Alignment.bottomCenter,
         padding: EdgeInsets.all(2),
         height: 50,
         child: Row(
@@ -81,7 +96,6 @@ class _ChatbotPageState extends State<ChatbotPage> {
                   hintText: 'Type your message here...',
                 ),
                 onEditingComplete: () async {
-                  response = await generateReply();
                   setState(() {});
                 },
               ),
@@ -98,18 +112,28 @@ class _ChatbotPageState extends State<ChatbotPage> {
     );
   }
 
+  Widget getReply(context, snapshot) {
+    if (snapshot.hasData) {
+      return Reply(txt: snapshot.data!); // Access the response
+    } else if (snapshot.hasError) {
+      return Reply(txt: 'Error: ${snapshot.error}'); // Handle error
+    } else {
+      return Center(child: CircularProgressIndicator()); // Loading indicator
+    }
+  }
+
   Future<String> generateReply() async {
     // Get user input from text field controller
     final userInput = userInputController.text;
     final Content content;
     if (userInput.isEmpty) {
-      content =
-          Content.text("Make a short 20-30 words greetings as an assistant.");
+      content = Content.text(
+          '''Make a short 20-30 words greetings as a pet adoption centre assistant.''');
     } else {
       content = Content.text(userInput);
     }
     final response = await chat.sendMessage(content);
-    print("response.text: ${response.text}");
+    // print("response.text: ${response.text}");
     return response.text!;
   }
 }
@@ -123,7 +147,7 @@ class ChatBox extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(20, 2, 20, 2),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Card(
             child: Padding(
@@ -143,14 +167,14 @@ class ChatBox extends StatelessWidget {
 }
 
 class Reply extends StatelessWidget {
-  Reply({Key? key, required this.word}) : super(key: key);
+  Reply({Key? key, required this.txt}) : super(key: key);
 
-  final String word;
+  final String txt;
 
   Widget build(BuildContext context) {
     return Container(
         padding: EdgeInsets.fromLTRB(20, 2, 20, 2),
-        child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Column(
             children: [
               Card(
@@ -158,7 +182,7 @@ class Reply extends StatelessWidget {
                   width: 500,
                   padding: EdgeInsets.all(10),
                   child: Text(
-                    word,
+                    txt,
                     style: TextStyle(color: Colors.white),
                     softWrap: true,
                   ),
