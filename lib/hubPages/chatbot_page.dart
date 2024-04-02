@@ -49,8 +49,6 @@ class _ChatbotPageState extends State<ChatbotPage> {
 
   @override
   Widget build(BuildContext context) {
-    // store user input
-
     final userInput = userInputController.text;
 
     return Scaffold(
@@ -69,18 +67,17 @@ class _ChatbotPageState extends State<ChatbotPage> {
                   style: widget.textStyleH1,
                 ),
               ),
-              ListView(shrinkWrap: true, children: <Widget>[
-                if (userInput.isNotEmpty) ChatBox(word: userInput),
-                FutureBuilder<String>(
-                  future: generateReply(), // Assign the future here
-                  builder: getReply,
-                ),
-              ]),
+              if (userInput.isNotEmpty)
+                ChatBox(word: userInput)
+              else
+                const SizedBox.shrink(),
+              FutureBuilder<String>(
+                future: fetchChatbotAnswer(),
+                builder: getReply,
+              ),
             ],
           ),
         ),
-
-        // text input always at the bottom
       ),
       bottomSheet: Container(
         alignment: Alignment.bottomCenter,
@@ -95,14 +92,14 @@ class _ChatbotPageState extends State<ChatbotPage> {
                 decoration: InputDecoration(
                   hintText: 'Type your message here...',
                 ),
-                onEditingComplete: () async {
+                onEditingComplete: () {
                   setState(() {});
                 },
               ),
             ),
             TextButton(
-              onPressed: () async {
-                setState(() {}); // Update UI after getting response
+              onPressed: () {
+                setState(() {});
               },
               child: Text('Ask'),
             ),
@@ -113,22 +110,25 @@ class _ChatbotPageState extends State<ChatbotPage> {
   }
 
   Widget getReply(context, snapshot) {
-    if (snapshot.hasData) {
-      return Reply(txt: snapshot.data!); // Access the response
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const Center(child: CircularProgressIndicator());
     } else if (snapshot.hasError) {
-      return Reply(txt: 'Error: ${snapshot.error}'); // Handle error
+      return Reply(txt: 'Error: ${snapshot.error}');
+    } else if (snapshot.hasData) {
+      // good
+      return Reply(txt: snapshot.data!);
     } else {
-      return Center(child: CircularProgressIndicator()); // Loading indicator
+      return const SizedBox.shrink();
     }
   }
 
-  Future<String> generateReply() async {
+  Future<String> fetchChatbotAnswer() async {
     // Get user input from text field controller
     final userInput = userInputController.text;
     final Content content;
     if (userInput.isEmpty) {
       content = Content.text(
-          '''Make a short 20-30 words greetings as a pet adoption centre assistant.''');
+          '''Make a short 15-25 words greetings as a pet adoption centre assistant.''');
     } else {
       content = Content.text(userInput);
     }
