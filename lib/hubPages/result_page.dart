@@ -155,6 +155,16 @@ class _ResultPageState extends State<ResultPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_pets.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Pet Details'),
+        ),
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('Search Results'),
@@ -163,30 +173,33 @@ class _ResultPageState extends State<ResultPage> {
         itemCount: _pets.length,
         itemBuilder: (context, index) {
           final pet = _pets[index];
-          return GestureDetector(
-            onTap: () {
-              // Navigate to PetDetailPage
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PetDetailPage(
-                    pet: pet,
-                    accessToken: _accessToken,
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () {
+                // Navigate to PetDetailPage
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PetDetailPage(
+                      pet: pet,
+                      accessToken: _accessToken,
+                    ),
                   ),
-                ),
-              );
-            },
-            child: ListTile(
-              title: Text(pet['name']),
-              subtitle: Text(pet['breeds']['primary']),
-              trailing: pet['photos'].isNotEmpty
-                  ? Image.network(
-                      pet['photos'][0]['small'],
-                      height: 50,
-                      width: 50,
-                      fit: BoxFit.cover,
-                    )
-                  : null,
+                );
+              },
+              child: ListTile(
+                title: Text(pet['name']),
+                subtitle: Text(pet['breeds']['primary']),
+                trailing: pet['photos'].isNotEmpty
+                    ? Image.network(
+                        pet['photos'][0]['small'],
+                        height: 50,
+                        width: 50,
+                        fit: BoxFit.cover,
+                      )
+                    : null,
+              ),
             ),
           );
         },
