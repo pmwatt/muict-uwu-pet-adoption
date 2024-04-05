@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:async';
+import 'pet_detail_page.dart';
 
 // Result Page
 class ResultPage extends StatefulWidget {
@@ -162,34 +163,31 @@ class _ResultPageState extends State<ResultPage> {
         itemCount: _pets.length,
         itemBuilder: (context, index) {
           final pet = _pets[index];
-          return ListTile(
-            title: Text(pet['name']),
-            subtitle: Text(pet['breeds']['primary']),
-            trailing: pet['photos'].isNotEmpty
-                ? Image.network(
-                    pet['photos'][0]['small'],
-                    height: 50,
-                    width: 50,
-                    fit: BoxFit.cover,
-                    errorBuilder: (BuildContext context, Object exception,
-                        StackTrace? stackTrace) {
-                      return const Text('Image Not Found');
-                    },
-                    // show loading progress
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                            // value: loadingProgress.expectedTotalBytes != null
-                            //     ? loadingProgress.cumulativeBytesLoaded /
-                            //         loadingProgress.expectedTotalBytes!
-                            //     : null,
-                            ),
-                      );
-                    },
-                  )
-                : const Text('No Image Provided'),
+          return GestureDetector(
+            onTap: () {
+              // Navigate to PetDetailPage
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PetDetailPage(
+                    pet: pet,
+                    accessToken: _accessToken,
+                  ),
+                ),
+              );
+            },
+            child: ListTile(
+              title: Text(pet['name']),
+              subtitle: Text(pet['breeds']['primary']),
+              trailing: pet['photos'].isNotEmpty
+                  ? Image.network(
+                      pet['photos'][0]['small'],
+                      height: 50,
+                      width: 50,
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
           );
         },
       ),
