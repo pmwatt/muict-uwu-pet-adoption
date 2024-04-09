@@ -1,7 +1,8 @@
+// pet detail page
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
 import 'organization_detail_page.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -58,17 +59,10 @@ class _PetDetailPageState extends State<PetDetailPage> {
     }
   }
 
-  // to launch url to the pet detail on the adoption centre site
-  Future<void> _launchUrl() async {
-    if (!await launchUrl(_petDetails['url'])) {
-      throw Exception('Cannot launch ${_petDetails['url']}');
-    }
-  }
-
   Future<void> _navigateToOrganizationDetails() async {
     if (_petDetails != null && _petDetails['organization_id'] != null) {
       String organizationId = _petDetails['organization_id'];
-      print(organizationId);
+      // print(organizationId);
 
       Navigator.push(
         context,
@@ -89,8 +83,8 @@ class _PetDetailPageState extends State<PetDetailPage> {
     try {
       // Get the current user's ID from Firebase Authentication
       String userId = await FirebaseAuth.instance.currentUser!.uid;
-      print('userId: ${userId}');
-      print('petId: ${widget.pet['id']}');
+      // print('userId: ${userId}');
+      // print('petId: ${widget.pet['id']}');
 
       // https://stackoverflow.com/questions/64934102/firestore-add-or-remove-elements-to-existing-array-with-flutter
       // Create a new document in the "bookmarks" collection with the pet's ID
@@ -121,7 +115,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
         ),
       );
     }
-    print(_petDetails);
+    // print(_petDetails);
 
     return Scaffold(
       appBar: AppBar(
@@ -156,65 +150,88 @@ class _PetDetailPageState extends State<PetDetailPage> {
               ),
               ////////////
 
+              SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: _addToBookmarks,
                 child: Text('Add to Bookmarks'),
               ),
 
               SizedBox(height: 16.0),
-              ElevatedButton(
-                child: Text('See Pet Detail'),
-                onPressed: _launchUrl,
-              ),
-              SizedBox(height: 16.0),
               Text(
                 'Description',
                 style: textStyleH2,
               ),
               SizedBox(height: 8.0),
-              Text(_petDetails['description']),
+              if (_petDetails['description'] != null)
+                Text(_petDetails['description'])
+              else
+                Text('No description'),
+
               SizedBox(height: 16.0),
               Text(
                 'Breed',
                 style: textStyleH2,
               ),
               SizedBox(height: 8.0),
-              Text('${_petDetails['breeds']['primary']}'),
+              if (_petDetails['breeds']['primary'] != null)
+                Text('${_petDetails['breeds']['primary']}')
+              else
+                Text('No breed'),
+
               SizedBox(height: 16.0),
               Text(
                 'Age',
                 style: textStyleH2,
               ),
               SizedBox(height: 8.0),
-              Text('${_petDetails['age']}'),
+              if (_petDetails['age'] != null)
+                Text('${_petDetails['age']}')
+              else
+                Text('No Age'),
+
               SizedBox(height: 16.0),
               Text(
                 'Gender',
                 style: textStyleH2,
               ),
               SizedBox(height: 8.0),
-              Text('${_petDetails['gender']}'),
+              if (_petDetails['gender'] != null)
+                Text('${_petDetails['gender']}')
+              else
+                Text('No Gender'),
+
               SizedBox(height: 16.0),
               Text(
                 'Size',
                 style: textStyleH2,
               ),
               SizedBox(height: 8.0),
-              Text('${_petDetails['size']}'),
+              if (_petDetails['size'] != null)
+                Text('${_petDetails['size']}')
+              else
+                Text('No size'),
+
               SizedBox(height: 16.0),
               Text(
                 'Coat',
                 style: textStyleH2,
               ),
               SizedBox(height: 8.0),
-              Text('${_petDetails['coat']}'),
+              if (_petDetails['coat'] != null)
+                Text('${_petDetails['coat']}')
+              else
+                Text('No coat'),
+
               SizedBox(height: 16.0),
               Text(
                 'Primary Color',
                 style: textStyleH2,
               ),
               SizedBox(height: 8.0),
-              Text('${_petDetails['colors']['primary']}'),
+              if (_petDetails['colors']['primary'] != null)
+                Text('${_petDetails['colors']['primary']}')
+              else
+                Text('No colour'),
               SizedBox(height: 16.0),
             ],
           ),

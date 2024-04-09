@@ -1,8 +1,16 @@
+// search page
+
+import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'result_page.dart';
+import 'pet_detail_page.dart';
 
 final List<String> petTypes = <String>['Dog', 'Cat', 'Bird', 'Rabbit'];
 
@@ -27,6 +35,76 @@ class _SearchPageState extends State<SearchPage> {
   var showcasePetList = ['images/hibernatingcat.jpg', 'images/drunkcat.jpg'];
   String petSelectedType = 'Animal Type'; // default selected pet type
   String searchMessage = "Search";
+  List<String> _bookmarkedPetIds = [];
+  Map<String, dynamic> _petDetails = {};
+  String _accessToken = '';
+  Timer? _tokenTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _getAccessToken().then((_) => _fetchBookmarkedPets());
+  }
+
+  @override
+  void dispose() {
+    _tokenTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _getAccessToken() async {
+    final clientId = dotenv.env['PETFINDER_API_KEY']!;
+    final clientSecret = dotenv.env['PETFINDER_SECRET']!;
+
+    final response = await http.post(
+      Uri.https('api.petfinder.com', '/v2/oauth2/token'),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body:
+          'grant_type=client_credentials&client_id=$clientId&client_secret=$clientSecret',
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        _accessToken = data['access_token'];
+        _tokenTimer =
+            Timer(Duration(seconds: data['expires_in']), _getAccessToken);
+      });
+    } else {
+      print(
+          'Failed to get access token, response status code: ${response.statusCode}');
+    }
+  }
+
+  Future<void> _fetchBookmarkedPets() async {
+    // Fetch bookmarked pet IDs from Firestore
+    String userId = await FirebaseAuth.instance.currentUser!.uid;
+    DocumentSnapshot snapshot = await FirebaseFirestore.instance
+        .collection('bookmarks')
+        .doc(userId)
+        .get();
+    if (snapshot.exists) {
+      _bookmarkedPetIds = List<String>.from(snapshot.get('arr_pets'));
+      _fetchPetDetails(_bookmarkedPetIds);
+    }
+  }
+
+  Future<void> _fetchPetDetails(List<String> petIds) async {
+    // Fetch pet details using Petfinder API
+    for (String petId in petIds) {
+      final response = await http.get(
+        Uri.https('api.petfinder.com', '/v2/animals/$petId'),
+        headers: {
+          'Authorization': 'Bearer $_accessToken',
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        _petDetails[petId] = data['animal'];
+      }
+    }
+    setState(() {});
+  }
 
   // handles checking if the form is empty or not
   Future<void> _searchPets() async {
@@ -42,6 +120,7 @@ class _SearchPageState extends State<SearchPage> {
             queryName: queryName,
             queryOrg: queryOrg,
             querySelectedType: petSelectedType,
+            accessToken: _accessToken,
           ),
         ),
       );
@@ -171,39 +250,37 @@ class _SearchPageState extends State<SearchPage> {
               Column(
                 children: [
                   Text(
-                    'Pets you\'ve browsed before',
+                    'Pets you\'ve bookmarked',
                     style: widget.textStyleH2,
                   ),
+                  ElevatedButton(
+                      onPressed: () {
+                        setState(() {});
+                      },
+                      child: Text('Refresh')),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        // children: [
-                        //   ListView.builder(itemBuilder: (context, index) {
-                        //     return Text('hi');
-                        //   }),
-                        // ],
-                        children: [
-                          BookmarkedPet(
-                              name: 'john',
-                              assetUrl: 'images/hibernatingcat.jpg'),
-                          BookmarkedPet(
-                              name: 'john', assetUrl: 'images/drunkcat.jpg'),
-                          BookmarkedPet(
-                              name: 'john',
-                              assetUrl: 'images/hibernatingcat.jpg'),
-                          BookmarkedPet(
-                              name: 'john', assetUrl: 'images/drunkcat.jpg'),
-                          BookmarkedPet(
-                              name: 'john',
-                              assetUrl: 'images/hibernatingcat.jpg'),
-                          BookmarkedPet(
-                              name: 'john', assetUrl: 'images/drunkcat.jpg'),
-                        ],
-
-                        // comment above
+                        children: _bookmarkedPetIds.map((petId) {
+                          if (_petDetails.containsKey(petId)) {
+                            return BookmarkedPet(
+                              petImageUrl: (_petDetails[petId]['photos']
+                                          .isNotEmpty &&
+                                      _petDetails[petId]['photos'][0]['full'] !=
+                                          null)
+                                  ? _petDetails[petId]['photos'][0]['full']
+                                  : '',
+                              name: _petDetails[petId]['name'],
+                              pet: _petDetails[petId],
+                              accessToken: _accessToken,
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        }).toList(),
                       ),
                     ),
                   )
@@ -222,12 +299,16 @@ class _SearchPageState extends State<SearchPage> {
 }
 
 class BookmarkedPet extends StatelessWidget {
-  final String assetUrl;
+  final String petImageUrl;
   final String name;
+  final dynamic pet;
+  final String accessToken;
   const BookmarkedPet({
     super.key,
-    required this.assetUrl,
+    required this.petImageUrl,
     required this.name,
+    required this.pet,
+    required this.accessToken,
   });
 
   @override
@@ -236,11 +317,36 @@ class BookmarkedPet extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: [
-          CircleAvatar(
-            backgroundImage: AssetImage(assetUrl),
-            radius: 60,
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PetDetailPage(
+                    pet: pet,
+                    accessToken: accessToken,
+                  ),
+                ),
+              );
+            },
+            child: Column(
+              children: [
+                if (petImageUrl != '')
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      petImageUrl,
+                    ),
+                    radius: 60,
+                  )
+                else
+                  Text('No Image'),
+              ],
+            ),
           ),
-          Text(name)
+          SizedBox(
+            height: 10,
+          ),
+          if (name.isNotEmpty) Text(name) else Text('No name'),
         ],
       ),
     );
