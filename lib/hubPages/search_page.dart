@@ -180,6 +180,11 @@ class _SearchPageState extends State<SearchPage> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        // children: [
+                        //   ListView.builder(itemBuilder: (context, index) {
+                        //     return Text('hi');
+                        //   }),
+                        // ],
                         children: [
                           BookmarkedPet(
                               name: 'john',
@@ -197,6 +202,8 @@ class _SearchPageState extends State<SearchPage> {
                           BookmarkedPet(
                               name: 'john', assetUrl: 'images/drunkcat.jpg'),
                         ],
+
+                        // comment above
                       ),
                     ),
                   )

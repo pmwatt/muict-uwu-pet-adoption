@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'organization_detail_page.dart';
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PetDetailPage extends StatefulWidget {
   final dynamic pet;
@@ -84,6 +85,30 @@ class _PetDetailPageState extends State<PetDetailPage> {
     }
   }
 
+  Future<void> _addToBookmarks() async {
+    try {
+      // Get the current user's ID from Firebase Authentication
+      String userId = await FirebaseAuth.instance.currentUser!.uid;
+      print('userId: ${userId}');
+      print('petId: ${widget.pet['id']}');
+
+      // https://stackoverflow.com/questions/64934102/firestore-add-or-remove-elements-to-existing-array-with-flutter
+      // Create a new document in the "bookmarks" collection with the pet's ID
+      await FirebaseFirestore.instance
+          .collection('bookmarks')
+          .doc(userId)
+          .update({
+        'arr_pets': FieldValue.arrayUnion([widget.pet['id'].toString()]),
+      });
+
+      // Display a success message or perform any other desired actions
+      print('Pet added to bookmarks successfully');
+    } catch (e) {
+      // Handle any errors that occurred during the bookmarking process
+      print('Error adding pet to bookmarks: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_petDetails == null) {
@@ -96,6 +121,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
         ),
       );
     }
+    print(_petDetails);
 
     return Scaffold(
       appBar: AppBar(
@@ -107,10 +133,13 @@ class _PetDetailPageState extends State<PetDetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (_petDetails['photos'].isNotEmpty)
+              if (_petDetails['photos'].isNotEmpty &&
+                  _petDetails['photos'][0]['full'] != null)
                 Image.network(
                   _petDetails['photos'][0]['full'],
                   fit: BoxFit.fitWidth,
+                  errorBuilder: (context, error, stackTrace) =>
+                      Text('Image not available'),
                 )
               else
                 Text('No Image Available'),
@@ -126,6 +155,11 @@ class _PetDetailPageState extends State<PetDetailPage> {
                 child: Text('See Adoption Centre'),
               ),
               ////////////
+
+              ElevatedButton(
+                onPressed: _addToBookmarks,
+                child: Text('Add to Bookmarks'),
+              ),
 
               SizedBox(height: 16.0),
               ElevatedButton(
