@@ -4,15 +4,16 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+
+// for api
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+
+// for navigation
 import 'result_page.dart';
 import 'pet_detail_page.dart';
-
-final List<String> petTypes = <String>['Dog', 'Cat', 'Bird', 'Rabbit'];
 
 // Search Page
 class SearchPage extends StatefulWidget {
@@ -30,15 +31,18 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  // for search
   final TextEditingController _searchNameController = TextEditingController();
-  final TextEditingController _searchOrgController = TextEditingController();
-  var showcasePetList = ['images/hibernatingcat.jpg', 'images/drunkcat.jpg'];
-  String petSelectedType = 'Animal Type'; // default selected pet type
   String searchMessage = "Search";
+
+  // for retrieving user's bookmark array
   List<String> _bookmarkedPetIds = [];
   Map<String, dynamic> _petDetails = {};
   String _accessToken = '';
   Timer? _tokenTimer;
+
+  // used for carousel
+  var showcasePetList = ['images/hibernatingcat.jpg', 'images/drunkcat.jpg'];
 
   @override
   void initState() {
@@ -109,25 +113,20 @@ class _SearchPageState extends State<SearchPage> {
   // handles checking if the form is empty or not
   Future<void> _searchPets() async {
     final queryName = _searchNameController.text;
-    final queryOrg = _searchOrgController.text;
-    if (petSelectedType != 'Animal Type' &&
-        (queryName.isNotEmpty || queryOrg.isNotEmpty)) {
+    if (queryName.isNotEmpty) {
       // Navigate to ResultPage with search query
       await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ResultPage(
             queryName: queryName,
-            queryOrg: queryOrg,
-            querySelectedType: petSelectedType,
             accessToken: _accessToken,
           ),
         ),
       );
-      SchedulerBinding.instance.addPostFrameCallback((_) {});
     } else {
       setState(() {
-        searchMessage = "Please select pet type and enter search query.";
+        searchMessage = "Please enter search query.";
       });
     }
   }
@@ -150,18 +149,8 @@ class _SearchPageState extends State<SearchPage> {
               SizedBox(
                 height: 50,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/organization');
-                },
-                child: Text("View Hot Adoption Centre Examples"),
-              ),
-              SizedBox(
-                height: 50,
-              ),
 
               // carousel
-              // reference:
               // https://pub.dev/packages/carousel_slider
               CarouselSlider(
                 options: CarouselOptions(height: 400.0),
@@ -169,9 +158,7 @@ class _SearchPageState extends State<SearchPage> {
                   return Builder(
                     builder: (BuildContext context) {
                       return ClipRRect(
-                          // width: MediaQuery.of(context).size.width,
                           borderRadius: BorderRadius.all(Radius.circular(20)),
-                          // margin: EdgeInsets.symmetric(horizontal: 5.0),
                           child: Image(
                             image: AssetImage(assetUrl),
                           ));
@@ -194,43 +181,15 @@ class _SearchPageState extends State<SearchPage> {
                       SizedBox(
                         height: 20,
                       ),
-
-                      // dropdown reference
-                      // https://api.flutter.dev/flutter/material/DropdownButton-class.html
-                      DropdownButton(
-                          hint: Text(petSelectedType),
-                          items: petTypes
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          onChanged: (String? value) {
-                            setState(() {
-                              petSelectedType = value!;
-                            });
-                          }),
-                      SizedBox(
-                        height: 20,
-                      ),
                       TextField(
                         controller: _searchNameController,
                         decoration: InputDecoration(
-                          hintText: 'Enter pet name',
+                          hintText:
+                              'Enter search query e.g. pet name, pet type',
                         ),
                       ),
                       SizedBox(
                         height: 20,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        controller: _searchOrgController,
-                        decoration: InputDecoration(
-                          hintText: 'Enter adoption centre name',
-                        ),
                       ),
                       SizedBox(
                         height: 20,
@@ -253,11 +212,6 @@ class _SearchPageState extends State<SearchPage> {
                     'Pets you\'ve bookmarked',
                     style: widget.textStyleH2,
                   ),
-                  ElevatedButton(
-                      onPressed: () {
-                        setState(() {});
-                      },
-                      child: Text('Refresh')),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SingleChildScrollView(

@@ -79,7 +79,8 @@ class _OrganizationDetailPageState extends State<OrganizationDetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (_organizationDetails['photos'].isNotEmpty)
+              if (_organizationDetails['photos'].isNotEmpty &&
+                  _organizationDetails['photos'][0]['full'] != null)
                 Image.network(
                   _organizationDetails['photos'][0]['full'],
                   fit: BoxFit.fitWidth,

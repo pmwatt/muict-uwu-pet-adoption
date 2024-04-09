@@ -107,9 +107,10 @@ class _LoginPageState extends State<LoginPage> {
           password: _passwordController.text,
         );
         // Navigate to home page or handle successful login
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const Hub()),
-        );
+        // Navigator.of(context).pushReplacement(
+        //   MaterialPageRoute(builder: (context) => const Hub()),
+        // );
+        Navigator.pushNamed(context, '/');
       } on FirebaseAuthException catch (e) {
         setState(() {
           _errorMessage = 'Invalid login';

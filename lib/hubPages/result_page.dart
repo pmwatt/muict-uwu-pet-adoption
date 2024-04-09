@@ -7,15 +7,9 @@ import 'pet_detail_page.dart';
 // Result Page
 class ResultPage extends StatefulWidget {
   final String queryName;
-  final String queryOrg;
-  final String querySelectedType;
   final String accessToken;
 
-  ResultPage(
-      {required this.queryName,
-      required this.queryOrg,
-      required this.querySelectedType,
-      required this.accessToken});
+  ResultPage({required this.queryName, required this.accessToken});
 
   @override
   _ResultPageState createState() => _ResultPageState();
@@ -34,20 +28,12 @@ class _ResultPageState extends State<ResultPage> {
 
   // step 2: call the api to get pet lists
   Future<void> _fetchPets() async {
-    // Get the pet type ID
-    // final petTypeId = await _getPetTypeId(widget.querySelectedType);
-
-    // Get the organization ID
-    // final orgId = await _getOrganizationId(widget.queryOrg);
-
     final url = Uri.https(
       'api.petfinder.com',
       '/v2/animals',
       {
         // search query
         'name': widget.queryName,
-        // 'type': petTypeId,
-        // 'organization': orgId,
         'limit': '20',
       },
     );
