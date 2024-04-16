@@ -42,7 +42,10 @@ class _SearchPageState extends State<SearchPage> {
   Timer? _tokenTimer;
 
   // used for carousel
-  var showcasePetList = ['images/hibernatingcat.jpg', 'images/drunkcat.jpg'];
+  var showcasePetList = [
+    'assets/images/hibernatingcat.jpg',
+    'assets/images/drunkcat.jpg'
+  ];
 
   @override
   void initState() {
@@ -158,7 +161,8 @@ class _SearchPageState extends State<SearchPage> {
                   return Builder(
                     builder: (BuildContext context) {
                       return ClipRRect(
-                          borderRadius: const BorderRadius.all(Radius.circular(20)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20)),
                           child: Image(
                             image: AssetImage(assetUrl),
                           ));

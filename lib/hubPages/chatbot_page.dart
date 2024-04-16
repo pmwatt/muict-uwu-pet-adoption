@@ -58,7 +58,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
           child: Column(
             children: [
               const CircleAvatar(
-                backgroundImage: AssetImage('images/drunkcat.jpg'),
+                backgroundImage: AssetImage('assets/images/drunkcat.jpg'),
                 radius: 100,
               ),
               Center(

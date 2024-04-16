@@ -30,7 +30,7 @@ class UWUApp extends StatelessWidget {
       },
       theme: ThemeData(
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color.fromARGB(30, 170, 100, 100),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 245, 237, 237),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: Color.fromARGB(255, 170, 112, 89),
           selectedItemColor: Color.fromARGB(255, 94, 57, 46),
@@ -38,8 +38,8 @@ class UWUApp extends StatelessWidget {
           showSelectedLabels: true,
           showUnselectedLabels: true,
         ),
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 255, 94, 73)),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 255, 94, 73)),
       ),
     );
   }
