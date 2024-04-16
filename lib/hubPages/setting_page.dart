@@ -37,12 +37,12 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               Text(
                 _message,
-                style: TextStyle(color: Colors.red),
+                style: const TextStyle(color: Colors.red),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _currentPasswordController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Current Password',
                 ),
                 obscureText: true,
@@ -50,20 +50,20 @@ class _SettingsPageState extends State<SettingsPage> {
                     ? 'Please enter your current password'
                     : null,
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _newPasswordController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'New Password',
                 ),
                 obscureText: true,
                 validator: (value) =>
                     value!.isEmpty ? 'Please enter a new password' : null,
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _confirmNewPasswordController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Confirm New Password',
                 ),
                 obscureText: true,
@@ -71,10 +71,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     ? 'Passwords do not match'
                     : null,
               ),
-              SizedBox(height: 32.0),
+              const SizedBox(height: 32.0),
               ElevatedButton(
                 onPressed: _changePassword,
-                child: Text('Change Password'),
+                child: const Text('Change Password'),
               ),
             ],
           ),

@@ -35,7 +35,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
       - your answers should be easily understood by a middle school student who have never raised pets before
       - in case if users ask questions not related to pets, animals, foods, or similar domain, you will reply that
       you recommend asking experts in those field. make sure that you only provide advices related to your specialties i.e. pets.
-      for example, if user asks "write hello world in c++", which is not related to pets or foods, you will reply
+      for example, if user asks "write hello world in c++", "generate a summary of how mitosis works", or other topics unrelated to pets/animals/taking care of pets/pet foods and medicines, etc., you will reply
       "Sorry, this question is outside the scope of my domain. Please consult respective experts in <user's question topic>. I am able to provide advices on how to take care of pets and our site's adoption centres."
       - in case if users say that they can no longer raise their pets because of circumstances, finance, etc.
       you can recommend them to contact one of the adoption centre so that they can take care of
@@ -57,7 +57,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
           padding: const EdgeInsets.fromLTRB(15, 15, 15, 100),
           child: Column(
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 backgroundImage: AssetImage('images/drunkcat.jpg'),
                 radius: 100,
               ),
@@ -68,7 +68,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
                 ),
               ),
               if (userInput.isNotEmpty)
-                ChatBox(word: userInput)
+                UserPromptChatbox(txt: userInput)
               else
                 const SizedBox.shrink(),
               FutureBuilder<String>(
@@ -81,7 +81,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
       ),
       bottomSheet: Container(
         alignment: Alignment.bottomCenter,
-        padding: EdgeInsets.all(2),
+        padding: const EdgeInsets.all(2),
         height: 50,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -89,7 +89,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
             Expanded(
               child: TextField(
                 controller: userInputController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Type your message here...',
                 ),
                 onEditingComplete: () {
@@ -101,7 +101,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
               onPressed: () {
                 setState(() {});
               },
-              child: Text('Ask'),
+              child: const Text('Ask'),
             ),
           ],
         ),
@@ -113,10 +113,10 @@ class _ChatbotPageState extends State<ChatbotPage> {
     if (snapshot.connectionState == ConnectionState.waiting) {
       return const Center(child: CircularProgressIndicator());
     } else if (snapshot.hasError) {
-      return Reply(txt: 'Error: ${snapshot.error}');
+      return ReplyChatbox(txt: 'Error: ${snapshot.error}');
     } else if (snapshot.hasData) {
       // good
-      return Reply(txt: snapshot.data!);
+      return ReplyChatbox(txt: snapshot.data!);
     } else {
       return const SizedBox.shrink();
     }
@@ -138,59 +138,62 @@ class _ChatbotPageState extends State<ChatbotPage> {
   }
 }
 
-class ChatBox extends StatelessWidget {
-  ChatBox({Key? key, required this.word}) : super(key: key);
+class UserPromptChatbox extends StatelessWidget {
+  const UserPromptChatbox({super.key, required this.txt});
 
-  final String word;
+  final String txt;
 
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(20, 2, 20, 2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Card(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Text(word),
-                ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Card(
+          color: Colors.white,
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            child: Expanded(
+              child: Text(
+                txt,
+                softWrap: true,
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 172, 92, 92),
+                ),
               ),
             ),
-            color: Colors.white,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
-class Reply extends StatelessWidget {
-  Reply({Key? key, required this.txt}) : super(key: key);
+class ReplyChatbox extends StatelessWidget {
+  const ReplyChatbox({super.key, required this.txt});
 
   final String txt;
 
+  @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.fromLTRB(20, 2, 20, 2),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Column(
-            children: [
-              Card(
-                child: Container(
-                  width: 500,
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    txt,
-                    style: TextStyle(color: Colors.white),
-                    softWrap: true,
-                  ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Card(
+          color: const Color.fromARGB(255, 172, 92, 92),
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            child: Expanded(
+              child: Text(
+                txt,
+                softWrap: true,
+                style: const TextStyle(
+                  color: Colors.white,
                 ),
-                color: Color.fromARGB(255, 172, 92, 92),
               ),
-            ],
-          )
-        ]));
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -12,7 +12,7 @@ class PetDetailPage extends StatefulWidget {
   final dynamic pet;
   final String accessToken;
 
-  PetDetailPage({
+  const PetDetailPage({super.key, 
     required this.pet,
     required this.accessToken,
   });
@@ -82,7 +82,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
   Future<void> _addToBookmarks() async {
     try {
       // Get the current user's ID from Firebase Authentication
-      String userId = await FirebaseAuth.instance.currentUser!.uid;
+      String userId = FirebaseAuth.instance.currentUser!.uid;
       // print('userId: ${userId}');
       // print('petId: ${widget.pet['id']}');
 
@@ -108,9 +108,9 @@ class _PetDetailPageState extends State<PetDetailPage> {
     if (_petDetails == null) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Pet Details'),
+          title: const Text('Pet Details'),
         ),
-        body: Center(
+        body: const Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -119,7 +119,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pet Details'),
+        title: const Text('Pet Details'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -133,106 +133,106 @@ class _PetDetailPageState extends State<PetDetailPage> {
                   _petDetails['photos'][0]['full'],
                   fit: BoxFit.fitWidth,
                   errorBuilder: (context, error, stackTrace) =>
-                      Text('Image not available'),
+                      const Text('Image not available'),
                 )
               else
-                Text('No Image Available'),
+                const Text('No Image Available'),
               Text(
                 _petDetails['name'],
                 style: textStyleH1,
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
 
               // this button to navigate to the organization taking care of the pet
               ElevatedButton(
                 onPressed: _navigateToOrganizationDetails,
-                child: Text('See Adoption Centre'),
+                child: const Text('See Adoption Centre'),
               ),
               ////////////
 
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: _addToBookmarks,
-                child: Text('Add to Bookmarks'),
+                child: const Text('Add to Bookmarks'),
               ),
 
-              SizedBox(height: 16.0),
-              Text(
+              const SizedBox(height: 16.0),
+              const Text(
                 'Description',
                 style: textStyleH2,
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               if (_petDetails['description'] != null)
                 Text(_petDetails['description'])
               else
-                Text('No description'),
+                const Text('No description'),
 
-              SizedBox(height: 16.0),
-              Text(
+              const SizedBox(height: 16.0),
+              const Text(
                 'Breed',
                 style: textStyleH2,
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               if (_petDetails['breeds']['primary'] != null)
                 Text('${_petDetails['breeds']['primary']}')
               else
-                Text('No breed'),
+                const Text('No breed'),
 
-              SizedBox(height: 16.0),
-              Text(
+              const SizedBox(height: 16.0),
+              const Text(
                 'Age',
                 style: textStyleH2,
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               if (_petDetails['age'] != null)
                 Text('${_petDetails['age']}')
               else
-                Text('No Age'),
+                const Text('No Age'),
 
-              SizedBox(height: 16.0),
-              Text(
+              const SizedBox(height: 16.0),
+              const Text(
                 'Gender',
                 style: textStyleH2,
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               if (_petDetails['gender'] != null)
                 Text('${_petDetails['gender']}')
               else
-                Text('No Gender'),
+                const Text('No Gender'),
 
-              SizedBox(height: 16.0),
-              Text(
+              const SizedBox(height: 16.0),
+              const Text(
                 'Size',
                 style: textStyleH2,
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               if (_petDetails['size'] != null)
                 Text('${_petDetails['size']}')
               else
-                Text('No size'),
+                const Text('No size'),
 
-              SizedBox(height: 16.0),
-              Text(
+              const SizedBox(height: 16.0),
+              const Text(
                 'Coat',
                 style: textStyleH2,
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               if (_petDetails['coat'] != null)
                 Text('${_petDetails['coat']}')
               else
-                Text('No coat'),
+                const Text('No coat'),
 
-              SizedBox(height: 16.0),
-              Text(
+              const SizedBox(height: 16.0),
+              const Text(
                 'Primary Color',
                 style: textStyleH2,
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               if (_petDetails['colors']['primary'] != null)
                 Text('${_petDetails['colors']['primary']}')
               else
-                Text('No colour'),
-              SizedBox(height: 16.0),
+                const Text('No colour'),
+              const SizedBox(height: 16.0),
             ],
           ),
         ),

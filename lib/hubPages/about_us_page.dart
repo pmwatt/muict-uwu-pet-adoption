@@ -21,7 +21,7 @@ class AboutUsPage extends StatelessWidget {
           style: textStyleH1,
           textAlign: TextAlign.center,
         ),
-        Text(
+        const Text(
             '6488038 Kanyavee Likitwattanakij\n6488053 Krittanai Peanjaroen\n6488160 Prachnachai Meakpaiboonwattana\n6488221 Thai Mekratanavorakul')
       ],
     );

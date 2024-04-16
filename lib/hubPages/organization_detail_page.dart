@@ -7,7 +7,7 @@ class OrganizationDetailPage extends StatefulWidget {
   final String organizationId;
   final String accessToken;
 
-  OrganizationDetailPage({
+  const OrganizationDetailPage({super.key, 
     required this.organizationId,
     required this.accessToken,
   });
@@ -61,9 +61,9 @@ class _OrganizationDetailPageState extends State<OrganizationDetailPage> {
     if (_organizationDetails == null) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Organization Details'),
+          title: const Text('Organization Details'),
         ),
-        body: Center(
+        body: const Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -71,7 +71,7 @@ class _OrganizationDetailPageState extends State<OrganizationDetailPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Organization Details'),
+        title: const Text('Organization Details'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -86,35 +86,35 @@ class _OrganizationDetailPageState extends State<OrganizationDetailPage> {
                   fit: BoxFit.fitWidth,
                 )
               else
-                Text('No Image Available'),
+                const Text('No Image Available'),
               Text(
                 _organizationDetails['name'],
                 style: textStyleH1,
               ),
-              SizedBox(height: 16.0),
-              Text(
+              const SizedBox(height: 16.0),
+              const Text(
                 'Contact',
                 style: textStyleH2,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               if (_organizationDetails['website'] == null)
-                Text('No URL Found')
+                const Text('No URL Found')
               else
                 Text(_organizationDetails['website']),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               if (_organizationDetails['email'] == null)
-                Text('No Email Found')
+                const Text('No Email Found')
               else
                 Text(_organizationDetails['email']),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               if (_organizationDetails['phone'] == null)
-                Text('No Phone Found')
+                const Text('No Phone Found')
               else
                 Text(_organizationDetails['phone']),
             ],

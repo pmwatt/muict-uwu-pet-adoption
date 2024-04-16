@@ -25,8 +25,8 @@ class UWUApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/': (context) => const Hub(),
-        '/login': (context) => LoginPage(),
-        '/register': (context) => RegisterPage(),
+        '/login': (context) => const LoginPage(),
+        '/register': (context) => const RegisterPage(),
       },
       theme: ThemeData(
         useMaterial3: true,
@@ -39,7 +39,7 @@ class UWUApp extends StatelessWidget {
           showUnselectedLabels: true,
         ),
         colorScheme:
-            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 255, 94, 73)),
+            ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 255, 94, 73)),
       ),
     );
   }

@@ -37,7 +37,7 @@ class _SearchPageState extends State<SearchPage> {
 
   // for retrieving user's bookmark array
   List<String> _bookmarkedPetIds = [];
-  Map<String, dynamic> _petDetails = {};
+  final Map<String, dynamic> _petDetails = {};
   String _accessToken = '';
   Timer? _tokenTimer;
 
@@ -82,7 +82,7 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<void> _fetchBookmarkedPets() async {
     // Fetch bookmarked pet IDs from Firestore
-    String userId = await FirebaseAuth.instance.currentUser!.uid;
+    String userId = FirebaseAuth.instance.currentUser!.uid;
     DocumentSnapshot snapshot = await FirebaseFirestore.instance
         .collection('bookmarks')
         .doc(userId)
@@ -139,14 +139,14 @@ class _SearchPageState extends State<SearchPage> {
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 200,
               ),
               Text(
                 'Adopt your dream pet online',
                 style: widget.textStyleH1,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
 
@@ -158,7 +158,7 @@ class _SearchPageState extends State<SearchPage> {
                   return Builder(
                     builder: (BuildContext context) {
                       return ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderRadius: const BorderRadius.all(Radius.circular(20)),
                           child: Image(
                             image: AssetImage(assetUrl),
                           ));
@@ -178,32 +178,32 @@ class _SearchPageState extends State<SearchPage> {
                         style: widget.textStyleH2,
                       ),
                       Text(searchMessage),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       TextField(
                         controller: _searchNameController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText:
                               'Enter search query e.g. pet name, pet type',
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       ElevatedButton(
                         onPressed: _searchPets,
-                        child: Text('Search'),
+                        child: const Text('Search'),
                       ),
                     ],
                   ),
                 ),
               ),
 
-              SizedBox(
+              const SizedBox(
                 height: 200,
               ),
               Column(
@@ -240,10 +240,10 @@ class _SearchPageState extends State<SearchPage> {
                   )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 200,
               ),
-              Text('Copyright 2024 @ UWU Co. Ltd. All Rights Reserved')
+              const Text('Copyright 2024 @ UWU Co. Ltd. All Rights Reserved')
             ],
           ),
         ),
@@ -293,14 +293,14 @@ class BookmarkedPet extends StatelessWidget {
                     radius: 60,
                   )
                 else
-                  Text('No Image'),
+                  const Text('No Image'),
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          if (name.isNotEmpty) Text(name) else Text('No name'),
+          if (name.isNotEmpty) Text(name) else const Text('No name'),
         ],
       ),
     );

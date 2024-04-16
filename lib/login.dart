@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'register.dart';
-import 'hub.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -88,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                 onPressed: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RegisterPage()),
+                  MaterialPageRoute(builder: (context) => const RegisterPage()),
                 ),
                 child: const Text('Register'),
               ),
@@ -106,12 +105,8 @@ class _LoginPageState extends State<LoginPage> {
           email: _emailController.text,
           password: _passwordController.text,
         );
-        // Navigate to home page or handle successful login
-        // Navigator.of(context).pushReplacement(
-        //   MaterialPageRoute(builder: (context) => const Hub()),
-        // );
         Navigator.pushNamed(context, '/');
-      } on FirebaseAuthException catch (e) {
+      } on FirebaseAuthException catch (_) {
         setState(() {
           _errorMessage = 'Invalid login';
         });

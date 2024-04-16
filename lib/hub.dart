@@ -53,12 +53,12 @@ class _HubState extends State<Hub> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: NavBarBottom(),
+      bottomNavigationBar: navBarBottom(),
     );
   }
 
-  BottomNavigationBar NavBarBottom() {
-    void _onItemTapped(int index) {
+  BottomNavigationBar navBarBottom() {
+    void onItemTapped(int index) {
       setState(() {
         _selectedIndex = index;
       });
@@ -68,7 +68,7 @@ class _HubState extends State<Hub> {
       // reference, albeit this uses navigation rail:
       // https://codelabs.developers.google.com/codelabs/flutter-codelab-first#6
       currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
+      onTap: onItemTapped,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home_rounded),

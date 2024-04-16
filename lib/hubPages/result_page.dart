@@ -9,7 +9,7 @@ class ResultPage extends StatefulWidget {
   final String queryName;
   final String accessToken;
 
-  ResultPage({required this.queryName, required this.accessToken});
+  const ResultPage({super.key, required this.queryName, required this.accessToken});
 
   @override
   _ResultPageState createState() => _ResultPageState();
@@ -58,69 +58,21 @@ class _ResultPageState extends State<ResultPage> {
     }
   }
 
-  // convert pet type string into ID
-  // so that we can search for pets using pet type id
-  Future<String> _getPetTypeId(String petType) async {
-    final response = await http.get(
-      Uri.https('api.petfinder.com', '/v2/types'),
-      headers: {
-        'Authorization': 'Bearer ${widget.accessToken}',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final types = data['types'];
-      final type = types
-          .firstWhere((t) => t['name'].toLowerCase() == petType.toLowerCase());
-      return type['_links']['self']['href'].split('/').last;
-    } else {
-      // Handle error
-      print(
-          'Failed to fetch pet types, response status code: ${response.statusCode}');
-      return '';
-    }
-  }
-
-  // converting user's string organization input into ID
-  // so that we can retrieve pets based on org ID
-  Future<String> _getOrganizationId(String orgName) async {
-    final response = await http.get(
-      Uri.https('api.petfinder.com', '/v2/organizations'),
-      headers: {
-        'Authorization': 'Bearer ${widget.accessToken}',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final organizations = data['organizations'];
-      final org = organizations.firstWhere(
-          (o) => o['name'].toLowerCase().contains(orgName.toLowerCase()));
-      return org['id'];
-    } else {
-      // Handle error
-      print(
-          'Failed to fetch organizations, response status code: ${response.statusCode}');
-      return '';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     if (_pets.isEmpty) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Pet Details'),
+          title: const Text('Pet Details'),
         ),
-        body: Center(
+        body: const Center(
           child: CircularProgressIndicator(),
         ),
       );
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search Results'),
+        title: const Text('Search Results'),
       ),
       body: ListView.builder(
         itemCount: _pets.length,
