@@ -1,6 +1,19 @@
 # MUICT UWU Pet Adoption
 Ultimate Wilderness Utopia.
 
+# Examples screenshots
+Figure 1: Trainer chatbot made using Google Vertex AI (Gemini Pro Model)
+![ภาพ](https://github.com/user-attachments/assets/2d5d9c0f-3c2d-429a-8cd0-af077c51124b)
+
+Figure 2: Home page
+![ภาพ](https://github.com/user-attachments/assets/6d9ac565-c978-4ffc-8525-725b03b263fe)
+
+Figure 3: Login page
+![ภาพ](https://github.com/user-attachments/assets/f518635b-83ad-455f-b5e3-4f4091a1bd5f)
+
+FIgure 4: Search result page
+![ภาพ](https://github.com/user-attachments/assets/f85b2304-0e9d-4631-bd6b-47e7b38ff0c9)
+
 # Setup
 1. Create `.env` in your local project's root.
 2. Get your Google API Key (Mahidol email will not work).
