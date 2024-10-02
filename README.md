@@ -1,5 +1,5 @@
 # MUICT UWU Pet Adoption
-Ultimate Wilderness Utopia. Made using Flutter for android, Firebase for database, and . Used [PetFinder](https://www.petfinder.com/developers/v2/docs/) and [Google generative AI](https://pub.dev/packages/google_generative_ai) for extra functionalities to fulfill the requirements.
+Ultimate Wilderness Utopia. Made using Dart/Flutter, Firebase for NoSQL database, and hard work. Used [PetFinder](https://www.petfinder.com/developers/v2/docs/) and [Google generative AI](https://pub.dev/packages/google_generative_ai) for extra functionalities to fulfill the requirements.
 
 # Examples screenshots
 Figure 1: Trainer chatbot made using Google Vertex AI (Gemini Pro Model)<br>
